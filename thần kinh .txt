@@ -159,7 +159,7 @@ end)
 -- 4. LUỒNG QUÉT ELITE BOSS
 --------------------------------------------------------------------------------
 task.spawn(function()
-    local WEB_URL = "https://apielite-8uiv.onrender.com" 
+    local WEB_URL = "https://apielite-8uiv.onrender.com/update-elite" 
     local previousEliteStatus = ""
 
     while true do
@@ -199,7 +199,7 @@ end)
 -- 5. LUỒNG QUÉT DARKBEARD (RÂU ĐEN)
 --------------------------------------------------------------------------------
 task.spawn(function()
-    local WEB_URL = "https://apidarkbeard.onrender.com" 
+    local WEB_URL = "https://apidarkbeard.onrender.com/update-darkbeard" 
     local previousDarkbeardStatus = ""
 
     while true do
@@ -238,7 +238,7 @@ end)
 -- 6. LUỒNG QUÉT DOUGH KING
 --------------------------------------------------------------------------------
 task.spawn(function()
-    local WEB_URL = "https://apidoughking.onrender.com" 
+    local WEB_URL = "https://apidoughking.onrender.com/update-doughking" 
     local previousDoughKingStatus = ""
 
     while true do
@@ -277,7 +277,7 @@ end)
 -- 7. LUỒNG QUÉT RIP INDRA
 --------------------------------------------------------------------------------
 task.spawn(function()
-    local WEB_URL = "https://apiripindra.onrender.com" 
+    local WEB_URL = "https://apiripindra.onrender.com/update-ripindra" 
     local previousRipIndraStatus = ""
 
     while true do
