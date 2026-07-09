@@ -10,6 +10,9 @@
 -- Instances:v
 
 local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MasterHub_ToggleGui"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
 local ImageButton = Instance.new("ImageButton")
 local UICorner = Instance.new("UICorner")
 local UIGradient = Instance.new("UIGradient")
@@ -25,6 +28,9 @@ ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ImageButton.Position = UDim2.new(0.10615778, 0, 0.16217947, 0)
 ImageButton.Size = UDim2.new(0.0627121851, 0, 0.107579626, 0)
 ImageButton.Image = "rbxassetid://11816162894"
+ImageButton.ZIndex = 999
+ImageButton.Visible = true
+ImageButton.Active = true
 
 UICorner.CornerRadius = UDim.new(0, 30)
 UICorner.Parent = ImageButton
@@ -83,9 +89,24 @@ local function YTZCAJC_fake_script() -- ImageButton.LocalScript
 			end
 		end
 	end)
-	script.Parent.MouseButton1Click:Connect(function()
-		game:GetService("VirtualInputManager"):SendKeyEvent(true,Enum.KeyCode.RightControl,false,game)
-	end)
+        -- [FIXED V3] Toggle trực tiếp Main, không dùng VirtualInputManager (bị chặn)
+        frame.MouseButton1Click:Connect(function()
+                local coreGui = game:GetService("CoreGui")
+                local master = coreGui:FindFirstChild("MASTERHUB")
+                if not master then return end
+                local main = master:FindFirstChild("Main")
+                if not main then return end
+                local hidden = main:GetAttribute("IsHidden")
+                if hidden == nil then hidden = false end
+                if not hidden then
+                        main:TweenSize(UDim2.new(0, 0, 0, 0),"In","Quad",0.4,true)
+                        main:SetAttribute("IsHidden", true)
+                else
+                        main:TweenSize(UDim2.new(0, 480, 0, 280),"Out","Quad",0.5,true)
+                        main:SetAttribute("IsHidden", false)
+                end
+        end)
+
 end
 coroutine.wrap(YTZCAJC_fake_script)()
 
@@ -255,8 +276,8 @@ local NotiFrame = Instance.new("Frame")
 		end
 		)
 	end 
-	DiscordLib:Notification("Thông Báo" , "Nhận Cày Thuê Bán Acc v4 Ae Nào Cần IB" , 6 ,11816162894 )
-	DiscordLib:Notification("Thông Báo" , "Link Facebook Ở Phần Setting " , 6 ,11816162894 )
+	DiscordLib:Notification("Thông Báo" , "Huyền Thoại Trở Lại" , 6 ,11816162894 )
+	DiscordLib:Notification("Thông Báo" , "Có Lỗi Thì Nhắn Trong Discord" , 6 ,11816162894 )
  local UserInputService = game:GetService("UserInputService")
  local TweenService = game:GetService("TweenService")
  
@@ -515,38 +536,25 @@ local NotiFrame = Instance.new("Frame")
  TCNR.Name = "TCNR"
  TCNR.Parent = Top
  
- local Logo = Instance.new("ImageLabel")
- Logo.Name = "Logo"
- Logo.Parent = Top
- Logo.BackgroundColor3 = Color3.fromRGB(224,224,224)
- Logo.BackgroundTransparency = 1.000
- Logo.Position = UDim2.new(-0.01, 0,-0.319, 0)
- Logo.Size = UDim2.new(0, 55,0, 45)
- Logo.Image = "rbxassetid://"..tostring(logo)
- 
+ -- [FIXED] Đã xóa Logo ID ảnh bên cạnh tên
+ -- Logo đã bị xóa theo yêu cầu (không còn rbxassetid:// hiển thị)
+
  local Name = Instance.new("TextLabel")
  Name.Name = "Name"
  Name.Parent = Top
  Name.BackgroundColor3 = Color3.fromRGB(224,224,224)
  Name.BackgroundTransparency = 1.000
- Name.Position = UDim2.new(0.0909756112, 0, 0, 0)
- Name.Size = UDim2.new(0, 61, 0, 27)
+ Name.Position = UDim2.new(0, 10, 0, 0)
+ Name.Size = UDim2.new(0, 460, 0, 27)
  Name.Font = Enum.Font.Code
- Name.Text = text
+ Name.Text = text -- text đã chứa "Master Hub"
  Name.TextColor3 = Color3.fromRGB(255, 11, 84)
  Name.TextSize = 16.000
- 
- local Hub = Instance.new("TextLabel")
- Hub.Name = "Hub"
- Hub.Parent = Top
- Hub.BackgroundColor3 = Color3.fromRGB(224,224,224)
- Hub.BackgroundTransparency = 1.000
- Hub.Position = UDim2.new(0, 78, 0, 0)
- Hub.Size = UDim2.new(0, 81, 0, 27)
- Hub.Font = Enum.Font.Code
- Hub.Text = "Hub"
- Hub.TextColor3 = Color3.fromRGB(255, 47, 172)
- Hub.TextSize = 16.000
+ Name.TextXAlignment = Enum.TextXAlignment.Left
+ Name.ClipsDescendants = false
+
+ -- [FIXED] Đã xóa label Hub riêng để tránh đè chữ "Master Hub" lên nhau
+ -- Nếu muốn giữ hiệu ứng 2 màu, dùng RichText thay vì 2 label
 
  
  
@@ -639,15 +647,20 @@ local NotiFrame = Instance.new("Frame")
  UIPageLayout.ScrollWheelInputEnabled = false
  UIPageLayout.TouchInputEnabled = false
  
+ Main:SetAttribute("IsHidden", false)
  MakeDraggable(Top,Main)
  
  UserInputService.InputBegan:Connect(function(input)
   if input.KeyCode == Enum.KeyCode[yoo] then
-  if uihide == false then
+  local hidden = Main:GetAttribute("IsHidden")
+  if hidden == nil then hidden = uihide end
+  if hidden == false then
   uihide = true
+  Main:SetAttribute("IsHidden", true)
   Main:TweenSize(UDim2.new(0, 0, 0, 0),"In","Quad",0.4,true)
   else
    uihide = false
+  Main:SetAttribute("IsHidden", false)
   Main:TweenSize(UDim2.new(0, 480, 0, 280),"Out","Quad",0.5,true)
   end
   end
@@ -2079,12 +2092,14 @@ if not _G.Color then _G.Color = Color3.fromRGB(96, 255, 231) end
 
 -- Xóa GUI cũ nếu có để tránh chồng
 pcall(function() game.CoreGui:FindFirstChild("MASTERHUB"):Destroy() end)
-pcall(function() game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ScreenGui"):Destroy() end)
+-- [FIXED] Đã xóa dòng Destroy ScreenGui ở PlayerGui vì nó làm mất nút bật/tắt
+-- pcall(function() game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ScreenGui"):Destroy() end)
+pcall(function() game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("MASTERHUB_TOGGLE_OLD"):Destroy() end)
 
 -- Tạo Window chính của Master Hub
 local MasterWindow = nil
 if Update and Update.Window then
-    MasterWindow = Update:Window("Vantablack - Master Hub", 11340301587, Enum.KeyCode.RightControl)
+    MasterWindow = Update:Window("Master Hub", 11340301587, Enum.KeyCode.RightControl)
 else
     warn("❌ Không tìm thấy Update:Window")
 end
@@ -2188,10 +2203,3 @@ end
 
 _G.Window = Window
 getgenv().Window = Window
-
-if DiscordLib and DiscordLib.Notification then
-    DiscordLib:Notification("Master Hub", "Đã load menu - "..tostring(14).." tab sẵn sàng!", 3)
-end
-
-
---[[ FILE GỐC 1 - MAIN LOGIC ]]--
